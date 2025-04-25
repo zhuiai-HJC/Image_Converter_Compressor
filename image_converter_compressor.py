@@ -11,9 +11,15 @@ from PIL import Image
 class ImageConverterCompressor(QWidget):
     def __init__(self):
         super().__init__()
-        self.initUI()
-        QIcon_path = os.path.join(os.path.dirname(__file__), 'pic', 'logo128x128.ico')
-        self.setWindowIcon(QIcon('app.ico'))
+        self.initUI()        
+        if getattr(sys, 'frozen', False):
+            # 如果是打包后的可执行文件
+            base_path = sys._MEIPASS
+        else:
+            # 如果是开发环境
+            base_path = os.path.dirname(os.path.abspath(__file__))        
+        icon_path = os.path.join(base_path, 'app.ico')
+        self.setWindowIcon(QIcon(icon_path))
 
     def initUI(self):
         # 创建布局
@@ -107,10 +113,12 @@ class ImageConverterCompressor(QWidget):
         if file_path:
             # 获取文件名
             file_name = os.path.basename(file_path)
+            self.file_path = file_path
+            # 显示文件名在标签上
             self.file_label.setText(file_name)
 
     def convert_and_compress(self):
-        input_file = self.file_label.text()
+        input_file = self.file_path
         if input_file == "未选择图片":
             return
         output_format = self.format_combobox.currentText().lower()
@@ -132,9 +140,9 @@ class ImageConverterCompressor(QWidget):
                     os.startfile(output_file) if os.name == 'nt' else os.system(f'xdg-open {output_file}')
             except Exception as e:
                 QMessageBox.critical(self, "错误", f"发生错误: {e}")
-                
+
 # The packaging cannot display Chinese characters, otherwise the icon will become the default image
-# pyinstaller .\image_converter_compressor.py --onefile -w -F --distpath .\ --name image_converter_compressor --icon=app.ico 
+# pyinstaller .\image_converter_compressor.py --onefile -w -F --distpath .\ --name image_converter_compressor --icon=app.ico -F --add-data "app.ico;."
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     converter = ImageConverterCompressor()

@@ -1,1 +1,1 @@
-pyinstaller .\image_converter_compressor.py --onefile -w -F --distpath .\ --name image_converter_compressor --icon=app.ico
+pyinstaller .\image_converter_compressor.py --onefile -w -F --distpath .\ --name image_converter_compressor --icon=app.ico -F --add-data "app.ico;."
