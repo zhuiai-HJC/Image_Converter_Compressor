@@ -133,6 +133,8 @@ class ImageConverterCompressor(QWidget):
             except Exception as e:
                 QMessageBox.critical(self, "错误", f"发生错误: {e}")
                 
+# The packaging cannot display Chinese characters, otherwise the icon will become the default image
+# pyinstaller .\image_converter_compressor.py --onefile -w -F --distpath .\ --name image_converter_compressor --icon=app.ico 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     converter = ImageConverterCompressor()
